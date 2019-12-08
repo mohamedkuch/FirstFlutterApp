@@ -1,4 +1,7 @@
+import 'package:crypto_converter/answer.dart';
 import 'package:flutter/material.dart';
+
+import 'package:crypto_converter/question.dart';
 
 void main(List<String> args) {
   runApp(MainApp());
@@ -7,29 +10,35 @@ void main(List<String> args) {
 class MainApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return MainAppState();
+    return _MainAppState();
   }
 }
 
-class MainAppState extends State<MainApp> {
+class _MainAppState extends State<MainApp> {
+  var _questionIndex = 0;
 
-  var questionIndex = 0; 
-
-  void answerQuestion() {
+  void _answerQuestion() {
     setState(() {
-      questionIndex += 1;
+      _questionIndex += 1;
     });
-
-    print(questionIndex);
 
   }
 
   @override
   Widget build(BuildContext context) {
     var questions = [
-      'What\'s your favorite color ?',
-      'What\'s your favorite name',
-      'What\'s your favorite dog',
+      {
+        'questionText': 'What\'s your favorite color ?',
+        'answers': ['White', 'Black', 'Blue', 'Red']
+      },
+      {
+        'questionText': 'What\'s your favorite name ?',
+        'answers': ['Kush', 'dd', 'bb', 'Rick']
+      },
+      {
+        'questionText': 'What\'s your favorite animal ?',
+        'answers': ['rabbit', 'Lion', 'Monkey', 'Elephant']
+      },
     ];
     return MaterialApp(
       home: Scaffold(
@@ -38,26 +47,16 @@ class MainAppState extends State<MainApp> {
         ),
         body: Column(
           children: [
-            Text(questions[questionIndex]),
-            RaisedButton(
-              child: Text('Answer 1 '),
-              onPressed: answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Answer 2 '),
-              onPressed: () => print('Answer 2 chosen'),
-            ),
-            RaisedButton(
-              child: Text('Answer 3 '),
-              onPressed: () => {
-                questionIndex = 2
+            Question(questions[_questionIndex]['questionText']),
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              print(answer);
 
-              },
-            )
+              return Answer(_answerQuestion, answer);
+            }).toList()
           ],
         ),
       ),
     );
   }
-
 }
